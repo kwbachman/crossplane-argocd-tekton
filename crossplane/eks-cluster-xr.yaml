@@ -1,0 +1,32 @@
+---
+apiVersion: eks.sarathy.io/v1beta1
+kind: EKSCluster
+metadata:
+  name: crossplane-cluster-kb
+spec:
+  parameters:
+    region: us-east-1
+    vpc-name: <vpc_name>
+    vpc-cidrBlock: <ip/22>
+
+    subnet1-private-name: <subnet1-private-name>
+    subnet1-private-cidrBlock: <ip/22>
+    subnet1-private-availabilityZone: "us-east-1a"
+
+    subnet2-private-name: <subnet2-private-name>
+    subnet2-private-cidrBlock: <ip/22>
+    subnet2-private-availabilityZone: "us-east-1c"
+
+    cluster-role: :role/eks-test
+    workernode-role: :role/eksNodeRole
+
+    k8s-version: "1.21"
+    workload-type: "non-gpu"
+    workers-size: 2
+
+  compositionRef:
+    name: amazon-eks-cluster
+
+  writeConnectionSecretToRef:
+    namespace: eks
+    name: crossplane-cluster-connection

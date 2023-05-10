@@ -1,0 +1,42 @@
+---
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: pipelinerun-spring-health-
+  labels:
+    app.kubernetes.io/description: PipelineRunSpringHealth
+spec:
+  serviceAccountName: pipeline
+  pipelineRef:
+    name: buildpacks
+  params:
+    - name: BUILDER_IMAGE
+      value: paketobuildpacks/builder:base
+    - name: TRUST_BUILDER
+      value: "true"
+    - name: APP_IMAGE
+      value: ""
+    - name: CONTAINER_IMAGE_REPO
+      value: kbachman/kubernetes
+    - name: SOURCE_URL
+      value: https://github.com/kwbach/app-spring-health
+    - name: SOURCE_SUBPATH
+      value: ""
+    - name: buildRevision
+      value: ''
+    - name: appGitUrl
+      value: 'git@github.com:kwbach/app-spring-health.git'
+    - name: configGitUrl
+      value: 'git@github.com:kwbach/config-spring-health.git'
+
+  workspaces:
+    - name: source-ws
+      subPath: source
+      persistentVolumeClaim:
+        claimName: ws-pvc-health
+    - name: cache-ws
+      subPath: cache
+      persistentVolumeClaim:
+        claimName: ws-pvc-health
+    - name: config-source
+      emptyDir: {}
